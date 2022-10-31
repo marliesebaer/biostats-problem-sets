@@ -1,0 +1,153 @@
+---
+title: "Baer_PS2"
+author: "Marliese"
+date: "10/31/2022"
+output: html_document
+---
+
+
+Lets set things up!
+
+```{r}
+rm(list = ls())
+library(dplyr)
+library(ggplot2)
+library(here)
+```
+
+
+Bring in the data using here() and convert the variables Costume and Type to factor
+
+```{r}
+DF <-read.csv(here("Data", "Halloween_data_PS2.csv"),stringsAsFactors=TRUE)
+```
+
+
+```{r}
+DF$Costume<-as.factor(DF$Costume) #convert to factor data type
+DF$Type<-as.factor(DF$Type)
+```
+
+
+Examine the dataset with at least 2 functions
+
+```{r}
+glimpse(DF)
+head(DF)
+str(DF)
+tail(DF)
+names(DF)
+summary(DF)
+```
+
+Look at the levels of the columns
+
+```{r}
+levels(DF$Costume)
+levels(DF$Type)
+```
+
+Fix any errors you see in the dataset.
+
+I saw that there were issues with the levels because of the way data was entered. Lets correct those errors.
+
+```{r}
+
+no<-which(DF$Costume=="clown"|DF$Costume=="Creepy clown")
+
+DF$Costume[no]<-"creepy clown"
+
+
+wrong<-which(DF$Costume=="witch"|DF$Costume=="witch ")
+
+DF$Costume[wrong]<-"Witch"
+
+
+ew<-which(DF$Costume=="wonder woman"|DF$Costume=="Wonder woman")
+
+DF$Costume[ew]<-"Wonder Woman"
+
+
+thenerve<-which(DF$Type=="scary"|DF$Type=="scary ")
+
+DF$Type[thenerve]<-"Scary"
+
+```
+
+
+```{r}
+DF$Costume <-factor(DF$Costume)
+levels(DF$Costume)
+
+DF$Type <-factor(DF$Type)
+levels(DF$Type)
+```
+
+Much better!
+
+
+Calculate the mean age of trick-or-treaters and the mean number of pieces of candy
+taken broken down by Costume and Type. Use those data to create figure 1, below.
+Match figure 1 as closely as you can.
+
+
+```{r}
+Try<-DF%>%
+  group_by(Costume,Type)%>%
+  summarise(
+    avg_age=mean(age),
+  avg_candy_pieces=mean(candy_pieces))
+```
+
+
+Make Figure 1
+
+```{r}
+ggplot(Try,aes(x=avg_age,y=avg_candy_pieces,colour=Type))+
+  geom_point(size=5)+
+  xlab("Mean age of kid (years)")+
+  ylab("Mean number pieces taken")+
+  theme_bw()
+```
+
+
+Next write code that isolates the data for children in “not scary” costumes who are 10 years old or younger 
+Use the resulting data to plot a histogram showing the number of kids in each age class and that comes as close as you can to replicating figure 2, below.
+
+
+```{r}
+NS10<-DF%>%
+  filter(Type=="Not scary")%>%
+  filter(age<=10)
+```
+
+Make Figure 2
+
+```{r}
+ggplot(NS10, aes(x = age))+
+     geom_histogram(bins=4)+
+  xlab("age of child")+
+  ylab("number")
+```
+
+
+
+Next, write code that replicates figure 3 below as closely as you can (Hint: try
+`coord_flip()` in your ggplot to get the axes reversed so that you can read the costume
+choice names).
+
+Make Figure 3
+
+```{r}
+ggplot(DF,aes(x=age,y=Costume))+
+  geom_boxplot()+
+  geom_point(size=4,colour='lightgrey',alpha=0.5)+
+  xlab("Child age (years)")+
+  ylab("Costume choice")+
+  facet_wrap(~Type)
+```
+
+
+All done!
+
+
