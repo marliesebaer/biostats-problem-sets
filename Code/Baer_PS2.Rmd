@@ -27,7 +27,7 @@ DF <-read.csv(here("Data", "Halloween_data_PS2.csv"),stringsAsFactors=TRUE)
 DF$Costume<-as.factor(DF$Costume) #convert to factor data type
 DF$Type<-as.factor(DF$Type)
 ```
-
+BECAUSE YOU USED `stringsAsFactors = TRUE` WHEN YOU READ THE DATA IN, LINES 26-29 ARE NOT DOING ANYTHING
 
 Examine the dataset with at least 2 functions
 
@@ -109,7 +109,7 @@ ggplot(Try,aes(x=avg_age,y=avg_candy_pieces,colour=Type))+
   ylab("Mean number pieces taken")+
   theme_bw()
 ```
-
+YOUR PLOT IS MISSING TWO SCARY POINTS AND 1 NOT SCARY POINT BECAUSE YOU DIDN'T USE  `na.rm = T` WHEN CALCULATING THE MEANS IN Try. See key for details.
 
 Next write code that isolates the data for children in “not scary” costumes who are 10 years old or younger 
 Use the resulting data to plot a histogram showing the number of kids in each age class and that comes as close as you can to replicating figure 2, below.
